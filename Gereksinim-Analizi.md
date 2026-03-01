@@ -1,36 +1,40 @@
 # Gereksinim Analizi
+1. **Kullanıcı Kaydı**
+- **API Metodu:** ` POST	/api/auth/register`
+- **Açıklama:** Yeni kullanıcıların kullanıcı adı, e-posta ve şifre ile sisteme dahil olması.
+     
+2. **Konu Başlıklarını Listeleme**
+- **API Metodu:** `GET	/api/titles`
+- **Açıklama:**  Ana sayfada en son açılan veya en popüler film/dizi tartışma başlıklarını görüntüleme.
 
-Tüm gereksinimlerinizi çıkardıktan sonra beraber tartışıyoruz ve son gereksinimlerin isimlerini hangi API metoduna karşılık geleceğini ve kısa açıklamalarını buraya numaralı bir şekilde yazıyorsunuz. Daha sonra aşağıya herkes kendi gereksinimiyle ilgili sayfayı oluşturmalı ve kendi sayfasında kendine ait gereksinimleri numaralı bir şekilde listeleyerek her bir gereksinimin açıklamalarını yazmalı. Toplamda grup üyesi sayısı kadar sayfa oluşturulmalı. Her grup üyesine eşit sayıda gereksinim atanmalı.
+3. **Yeni Başlık Açma**
+- **API Metodu:** ` POST	/api/titles`
+- **Açıklama:** Kullanıcının belirli bir film veya dizi hakkında yeni bir tartışma konusu oluşturması.
 
-## Gereksinim Sayıları (En Az)
+4. **Yorumları Getirme**
+- **API Metodu:** `GET	/api/titles/{id}/comments`
+- **Açıklama:**  Belirli bir başlık altındaki tüm kullanıcı yorumlarını ve tartışmaları listeleme.
 
-- **1 Kişi:** 10 gereksinim
-- **2 Kişi:** 16 gereksinim
-- **3 Kişi:** 21 gereksinim
-- **4 Kişi:** 24 gereksinim
-- **5 Kişi:** 30 gereksinim
+5. **Yorum Yapma**
+- **API Metodu:** `POST	/api/comments`
+- **Açıklama:**  Kullanıcının var olan bir başlığa kendi fikrini veya cevabını eklemesi.
 
-## Gereksinimlerde Uyulması Gereken Kurallar
+6. **Yorum Güncelleme**
+- **API Metodu:** `PUT	/api/comments/{id}`
+- **Açıklama:** Kullanıcının yazdığı bir yorumdaki yazım hatasını düzeltmesi veya içeriği değiştirmesi.
 
-1. **İsimler anlamlı olmalı:** Gereksinim isimleri net ve anlaşılır olmalıdır.
-2. **Açıklamalar net olmalı:** Her gereksinimin açıklaması açık ve anlaşılır şekilde yazılmalıdır.
-3. **Açıklamalar teknik jargon ve kısaltmalar içermemeli:** Gereksinim açıklamaları herkesin anlayabileceği basit bir dille yazılmalıdır.
-4. **Gereksinim isimleri çok uzun olmamalı ve bir eylem bildirmeli:** 
-   - İsimler kısa ve öz olmalıdır
-   - Bir eylem fiili içermelidir
-   - Örnekler: "Kayıt Olma", "Giriş Yapma", "Profil Güncelleme", "Hesap Silme"
+7. **Yorum Silme**
+- **API Metodu:** ` DELETE	/api/comments/{id}`
+- **Açıklama:** Kullanıcının kendi yorumunu veya moderatörün uygunsuz bir içeriği kaldırması.
+     
+8. **Profil Güncelleme**
+- **API Metodu:** `PUT	/api/user/profile`
+- **Açıklama:** Kullanıcının biyografisini, profil fotoğrafını veya favori türlerini değiştirmesi.
+     
+9. **Şifre Yenileme**
+- **API Metodu:** `POST	/api/user/reset-password`
+- **Açıklama:** Güvenlik amacıyla veya unutma durumunda mevcut şifrenin güncellenmesi.
 
-# Tüm Gereksinimler 
-
-1. **Giriş Yapma** (Ali Tutar)
-2. **Üye Olma** (Ali Tutar)
-3. ..
-4. ..
-# Gereksinim Dağılımları
-
-1. [Ali Tutar'ın Gereksinimleri](Ali-Tutar/Ali-Tutar-Gereksinimler.md)
-2. [Grup Üyesi 2'nin Gereksinimleri](Grup-Uyesi-2/Grup-Uyesi-2-Gereksinimler.md)
-3. [Grup Üyesi 3'ün Gereksinimleri](Grup-Uyesi-3/Grup-Uyesi-3-Gereksinimler.md)
-4. [Grup Üyesi 4'ün Gereksinimleri](Grup-Uyesi-4/Grup-Uyesi-4-Gereksinimler.md)
-5. [Grup Üyesi 5'in Gereksinimleri](Grup-Uyesi-5/Grup-Uyesi-5-Gereksinimler.md)
-6. [Grup Üyesi 6'nın Gereksinimleri](Grup-Uyesi-6/Grup-Uyesi-6-Gereksinimler.md)
+10. **Başlık Kaldırma**
+- **API Metodu:** `DELETE	/api/titles/{id}`
+- **Açıklama:** Açılan bir tartışma konusunun (yanlış kategori, kopya içerik vb.) sistemden tamamen silinmesi.
