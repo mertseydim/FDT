@@ -1,40 +1,51 @@
 # Gereksinim Analizi
+
+---
+
 1. **Kullanıcı Kaydı**
-- **API Metodu:** ` POST	/api/auth/register`
-- **Açıklama:** Yeni kullanıcıların kullanıcı adı, e-posta ve şifre ile sisteme dahil olması.
-     
-2. **Konu Başlıklarını Listeleme**
-- **API Metodu:** `GET	/api/titles`
-- **Açıklama:**  Ana sayfada en son açılan veya en popüler film/dizi tartışma başlıklarını görüntüleme.
+   - **API Metodu:** `POST /api/auth/register`
+   - **Açıklama:** Yeni kullanıcıların kullanıcı adı, e-posta ve şifre ile sisteme dahil olması.
 
-3. **Yeni Başlık Açma**
-- **API Metodu:** ` POST	/api/titles`
-- **Açıklama:** Kullanıcının belirli bir film veya dizi hakkında yeni bir tartışma konusu oluşturması.
+2. **Kullanıcı Girişi**
+   - **API Metodu:** `POST /api/auth/login`
+   - **Açıklama:** Kayıtlı kullanıcıların e-posta ve şifre ile sisteme giriş yapması. Başarılı girişte JWT token üretilir ve kullanıcıya döndürülür.
 
-4. **Yorumları Getirme**
-- **API Metodu:** `GET	/api/titles/{id}/comments`
-- **Açıklama:**  Belirli bir başlık altındaki tüm kullanıcı yorumlarını ve tartışmaları listeleme.
+3. **Şifre Yenileme**
+   - **API Metodu:** `POST /api/auth/reset-password`
+   - **Açıklama:** Güvenlik amacıyla veya unutma durumunda mevcut şifrenin güncellenmesi.
 
-5. **Yorum Yapma**
-- **API Metodu:** `POST	/api/comments`
-- **Açıklama:**  Kullanıcının var olan bir başlığa kendi fikrini veya cevabını eklemesi.
+4. **Kullanıcı Profili Görüntüleme**
+   - **API Metodu:** `GET /api/user/:id/profile`
+   - **Açıklama:** Herhangi bir kullanıcının herkese açık profil bilgilerinin görüntülenmesi.
 
-6. **Yorum Güncelleme**
-- **API Metodu:** `PUT	/api/comments/{id}`
-- **Açıklama:** Kullanıcının yazdığı bir yorumdaki yazım hatasını düzeltmesi veya içeriği değiştirmesi.
+5. **Kullanıcı Profili Güncelleme**
+   - **API Metodu:** `PUT /api/user/:id/profile`
+   - **Açıklama:** Oturum açmış kullanıcının kendi profil bilgilerini güncelleyebilmesi.
 
-7. **Yorum Silme**
-- **API Metodu:** ` DELETE	/api/comments/{id}`
-- **Açıklama:** Kullanıcının kendi yorumunu veya moderatörün uygunsuz bir içeriği kaldırması.
-     
-8. **Profil Güncelleme**
-- **API Metodu:** `PUT	/api/user/profile`
-- **Açıklama:** Kullanıcının biyografisini, profil fotoğrafını veya favori türlerini değiştirmesi.
-     
-9. **Şifre Yenileme**
-- **API Metodu:** `POST	/api/user/reset-password`
-- **Açıklama:** Güvenlik amacıyla veya unutma durumunda mevcut şifrenin güncellenmesi.
+6. **Gönderi Oluşturma**
+   - **API Metodu:** `POST /api/post/create`
+   - **Açıklama:** Giriş yapmış kullanıcının metin ve/veya medya içerikli yeni bir forum gönderisi oluşturması.
 
-10. **Başlık Kaldırma**
-- **API Metodu:** `DELETE	/api/titles/{id}`
-- **Açıklama:** Açılan bir tartışma konusunun (yanlış kategori, kopya içerik vb.) sistemden tamamen silinmesi.
+7. **Gönderi Listeleme / Akış**
+   - **API Metodu:** `GET /api/post/feed`
+   - **Açıklama:** Platformdaki gönderilerin zaman damgasına veya popülerliğe göre sıralanarak listelenmesi.
+
+8. **Gönderi Beğenme**
+   - **API Metodu:** `POST /api/post/:id/like`
+   - **Açıklama:** Giriş yapmış kullanıcının bir gönderiyi beğenmesi veya beğeniyi geri alması.
+
+9. **Yorum Yapma**
+   - **API Metodu:** `POST /api/post/:id/comment`
+   - **Açıklama:** Kullanıcıların bir forum gönderisine yorum yazabilmesi.
+
+10. **Kullanıcı Takip Etme**
+    - **API Metodu:** `POST /api/user/:id/follow`
+    - **Açıklama:** Kullanıcıların birbirini takip edebilmesi ve takipten çıkabilmesi.
+
+11. **Bildirim Sistemi**
+    - **API Metodu:** `GET /api/user/notifications`
+    - **Açıklama:** Kullanıcının beğeni, yorum ve takip gibi etkileşimlerine ait bildirimlerin listelenmesi.
+
+12. **Kullanıcı Çıkışı**
+    - **API Metodu:** `POST /api/auth/logout`
+    - **Açıklama:** Oturum açmış kullanıcının sistemden güvenli çıkış yapması.
