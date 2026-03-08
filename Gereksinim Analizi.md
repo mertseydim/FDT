@@ -1,4 +1,4 @@
-# 📋 Proje Gereksinimleri — Sosyal Medya / Forum Web Uygulaması
+# Gereksinim Analizi
 
 ---
 
