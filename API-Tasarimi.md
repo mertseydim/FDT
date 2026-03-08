@@ -1,4 +1,4 @@
-# API Tasarımı -
+# API Tasarımı
 
 **OpenAPI Spesifikasyon Dosyası:** [rest-api-design.yaml](rest-api-design.yaml)
 
@@ -715,5 +715,6 @@ components:
                 example: Kayıt bulunamadı.
 
 ``
+
 
 
