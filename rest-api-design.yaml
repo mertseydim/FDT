@@ -1,0 +1,706 @@
+openapi: 3.0.3
+info:
+  title: FDT Sosyal Medya / Forum API
+  description: >
+    Bu API, FDT.com sosyal medya ve forum web uygulaması için kullanıcı yönetimi,
+    gönderi, yorum, beğeni, takip ve bildirim gibi temel işlevleri kapsamaktadır.
+  version: 1.0.0
+  contact:
+    name: TSM
+
+servers:
+  - url: https://api.fdt.com/v1
+    description: Production Sunucusu
+  - url: http://localhost:3000/api
+    description: Geliştirme Sunucusu
+
+tags:
+  - name: Kullanıcı
+    description: Kullanıcı kayıt, giriş, profil ve kimlik doğrulama işlemleri
+  - name: Gönderi
+    description: Forum gönderisi oluşturma, listeleme ve beğeni işlemleri
+  - name: Yorum
+    description: Gönderilere yorum yapma işlemleri
+  - name: Takip
+    description: Kullanıcılar arası takip işlemleri
+  - name: Bildirim
+    description: Kullanıcı bildirimleri
+
+paths:
+
+  # ──────────────────────────────────────────
+  # 1. Kullanıcı Kaydı
+  # ──────────────────────────────────────────
+  /user/register:
+    post:
+      tags:
+        - Kullanıcı
+      summary: Kullanıcı Kaydı
+      description: >
+        Yeni kullanıcıların sisteme ad, soyad, e-posta ve şifre bilgileriyle
+        kayıt olması. Kayıt sırasında e-posta doğrulama bağlantısı gönderilir.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - email
+                - password
+              properties:
+                firstName:
+                  type: string
+                  example: Ahmet
+                lastName:
+                  type: string
+                  example: Yılmaz
+                email:
+                  type: string
+                  format: email
+                  example: ahmet@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: Gizli1234!
+      responses:
+        '201':
+          description: Kullanıcı başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Bu e-posta adresi zaten kayıtlı
+
+  # ──────────────────────────────────────────
+  # 2. Kullanıcı Girişi
+  # ──────────────────────────────────────────
+  /user/login:
+    post:
+      tags:
+        - Kullanıcı
+      summary: Kullanıcı Girişi
+      description: >
+        Kayıtlı kullanıcıların e-posta ve şifre ile sisteme giriş yapması.
+        Başarılı girişte JWT token üretilir ve kullanıcıya döndürülür.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: ahmet@example.com
+                password:
+                  type: string
+                  format: password
+                  example: Gizli1234!
+      responses:
+        '200':
+          description: Giriş başarılı, JWT token döndürüldü
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    $ref: '#/components/schemas/UserSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ──────────────────────────────────────────
+  # 3. Şifre Yenileme
+  # ──────────────────────────────────────────
+  /user/reset-password:
+    post:
+      tags:
+        - Kullanıcı
+      summary: Şifre Yenileme
+      description: >
+        Güvenlik amacıyla veya unutma durumunda mevcut şifrenin güncellenmesi.
+        Kullanıcıya e-posta ile doğrulama kodu gönderilir.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - resetCode
+                - newPassword
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: ahmet@example.com
+                resetCode:
+                  type: string
+                  example: "483920"
+                newPassword:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: YeniGizli5678!
+      responses:
+        '200':
+          description: Şifre başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ──────────────────────────────────────────
+  # 4. Kullanıcı Profili Görüntüleme
+  # ──────────────────────────────────────────
+  /user/{id}/profile:
+    get:
+      tags:
+        - Kullanıcı
+      summary: Kullanıcı Profili Görüntüleme
+      description: >
+        Herhangi bir kullanıcının herkese açık profil bilgilerinin
+        (kullanıcı adı, biyografi, gönderi sayısı) görüntülenmesi.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Görüntülenecek kullanıcının ID'si
+          example: "64a7f2c3e4b0d1f2a3b4c5d6"
+      responses:
+        '200':
+          description: Kullanıcı profili başarıyla döndürüldü
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    # ──────────────────────────────────────────
+    # 5. Kullanıcı Profili Güncelleme
+    # ──────────────────────────────────────────
+    put:
+      tags:
+        - Kullanıcı
+      summary: Kullanıcı Profili Güncelleme
+      description: >
+        Oturum açmış kullanıcının kendi profil bilgilerini
+        (ad, biyografi, profil fotoğrafı) güncelleyebilmesi.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "64a7f2c3e4b0d1f2a3b4c5d6"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Ahmet
+                lastName:
+                  type: string
+                  example: Yılmaz
+                bio:
+                  type: string
+                  example: Yazılım geliştirmeyi seven biriyim.
+                profileImageUrl:
+                  type: string
+                  format: uri
+                  example: https://cdn.fdt.com/avatars/ahmet.jpg
+      responses:
+        '200':
+          description: Profil başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ──────────────────────────────────────────
+  # 6. Gönderi Oluşturma
+  # ──────────────────────────────────────────
+  /post/create:
+    post:
+      tags:
+        - Gönderi
+      summary: Gönderi Oluşturma
+      description: >
+        Giriş yapmış kullanıcının metin ve/veya medya içerikli yeni bir forum
+        gönderisi oluşturması. Gönderi kategori ile etiketlenebilir.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+              properties:
+                title:
+                  type: string
+                  example: React öğrenmek için nereden başlamalıyım?
+                content:
+                  type: string
+                  example: Merhaba, React öğrenmek istiyorum ama nereden başlayacağımı bilemedim...
+                category:
+                  type: string
+                  example: Yazılım
+                mediaUrl:
+                  type: string
+                  format: uri
+                  example: https://cdn.fdt.com/posts/img1.png
+      responses:
+        '201':
+          description: Gönderi başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ──────────────────────────────────────────
+  # 7. Gönderi Listeleme / Akış
+  # ──────────────────────────────────────────
+  /post/feed:
+    get:
+      tags:
+        - Gönderi
+      summary: Gönderi Listeleme / Akış
+      description: >
+        Platformdaki gönderilerin zaman damgasına veya popülerliğe göre
+        sıralanarak listelenmesi. Sayfalama (pagination) desteklenir.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Sayfa numarası
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+          description: Sayfa başına gönderi sayısı
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [newest, popular]
+            default: newest
+          description: Sıralama kriteri
+      responses:
+        '200':
+          description: Gönderi listesi başarıyla döndürüldü
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 150
+                  page:
+                    type: integer
+                    example: 1
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+
+  # ──────────────────────────────────────────
+  # 8. Gönderi Beğenme
+  # ──────────────────────────────────────────
+  /post/{id}/like:
+    post:
+      tags:
+        - Gönderi
+      summary: Gönderi Beğenme / Beğeniyi Geri Alma
+      description: >
+        Giriş yapmış kullanıcının bir gönderiyi beğenmesi veya beğeniyi geri
+        alması. Toplam beğeni sayısı anlık olarak güncellenir.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Beğenilecek gönderinin ID'si
+          example: "64b1e3f4d5c6a7b8c9d0e1f2"
+      responses:
+        '200':
+          description: Beğeni durumu güncellendi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  liked:
+                    type: boolean
+                    example: true
+                  totalLikes:
+                    type: integer
+                    example: 42
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────
+  # 9. Yorum Yapma
+  # ──────────────────────────────────────────
+  /post/{id}/comment:
+    post:
+      tags:
+        - Yorum
+      summary: Yorum Yapma
+      description: >
+        Kullanıcıların bir forum gönderisine yorum yazabilmesi.
+        Yorumlar, gönderi detay sayfasında zaman sırasıyla listelenir.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Yorum yapılacak gönderinin ID'si
+          example: "64b1e3f4d5c6a7b8c9d0e1f2"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example: Bence önce resmi dokümantasyondan başlamalısın.
+      responses:
+        '201':
+          description: Yorum başarıyla eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────
+  # 10. Kullanıcı Takip Etme
+  # ──────────────────────────────────────────
+  /user/{id}/follow:
+    post:
+      tags:
+        - Takip
+      summary: Kullanıcı Takip Etme / Takipten Çıkma
+      description: >
+        Kullanıcıların birbirini takip edebilmesi ve takipten çıkabilmesi.
+        Takip edilen kullanıcıların gönderileri kişisel akışta öncelikli gösterilir.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Takip edilecek / takipten çıkılacak kullanıcının ID'si
+          example: "64a7f2c3e4b0d1f2a3b4c5d6"
+      responses:
+        '200':
+          description: Takip durumu güncellendi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  following:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Kullanıcı takip edildi.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────
+  # 11. Bildirim Listesi
+  # ──────────────────────────────────────────
+  /user/notifications:
+    get:
+      tags:
+        - Bildirim
+      summary: Bildirim Sistemi
+      description: >
+        Kullanıcının beğeni, yorum ve takip gibi etkileşimlerine ait
+        bildirimlerin listelenmesi. Okunmamış bildirimler ayrıca işaretlenir.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Bildirimler başarıyla döndürüldü
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unreadCount:
+                    type: integer
+                    example: 5
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ──────────────────────────────────────────
+  # 12. Kullanıcı Çıkışı
+  # ──────────────────────────────────────────
+  /user/logout:
+    post:
+      tags:
+        - Kullanıcı
+      summary: Kullanıcı Çıkışı
+      description: >
+        Oturum açmış kullanıcının sistemden güvenli çıkış yapması.
+        Sunucu tarafında ilgili JWT token geçersiz kılınır.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Çıkış başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+# ──────────────────────────────────────────────────
+# COMPONENTS
+# ──────────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: İşlem başarıyla tamamlandı.
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64a7f2c3e4b0d1f2a3b4c5d6"
+        firstName:
+          type: string
+          example: Ahmet
+        lastName:
+          type: string
+          example: Yılmaz
+        email:
+          type: string
+          example: ahmet@example.com
+
+    UserProfile:
+      allOf:
+        - $ref: '#/components/schemas/UserSummary'
+        - type: object
+          properties:
+            bio:
+              type: string
+              example: Yazılım geliştirmeyi seven biriyim.
+            profileImageUrl:
+              type: string
+              example: https://cdn.fdt.com/avatars/ahmet.jpg
+            postCount:
+              type: integer
+              example: 24
+            followerCount:
+              type: integer
+              example: 130
+            followingCount:
+              type: integer
+              example: 75
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64b1e3f4d5c6a7b8c9d0e1f2"
+        title:
+          type: string
+          example: React öğrenmek için nereden başlamalıyım?
+        content:
+          type: string
+          example: Merhaba, React öğrenmek istiyorum...
+        category:
+          type: string
+          example: Yazılım
+        mediaUrl:
+          type: string
+          example: https://cdn.fdt.com/posts/img1.png
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        likeCount:
+          type: integer
+          example: 42
+        commentCount:
+          type: integer
+          example: 8
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-07-10T14:30:00Z"
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64c2f5a6b7d8e9f0a1b2c3d4"
+        content:
+          type: string
+          example: Bence önce resmi dokümantasyondan başlamalısın.
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-07-10T15:00:00Z"
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64d3g6b7c8e9f0a1b2c3d4e5"
+        type:
+          type: string
+          enum: [like, comment, follow]
+          example: like
+        message:
+          type: string
+          example: Ahmet Yılmaz gönderini beğendi.
+        isRead:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-07-10T16:00:00Z"
+
+  responses:
+    BadRequest:
+      description: Geçersiz istek verisi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Eksik veya hatalı alan bulunuyor.
+
+    Unauthorized:
+      description: Kimlik doğrulama başarısız
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Geçersiz veya süresi dolmuş token.
+
+    Forbidden:
+      description: Bu işlem için yetkiniz yok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Bu kaynağa erişim izniniz bulunmuyor.
+
+    NotFound:
+      description: İstenen kaynak bulunamadı
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Kayıt bulunamadı.
