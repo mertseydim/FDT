@@ -1,6 +1,6 @@
 # API Tasarımı - OpenAPI Specification Örneği
 
-**OpenAPI Spesifikasyon Dosyası:** [lamine.yaml](lamine.yaml)
+**OpenAPI Spesifikasyon Dosyası:** [rest-api-design.yaml](rest-api-design.yaml)
 
 Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış örnek bir API tasarımını içermektedir.
 
@@ -793,4 +793,5 @@ components:
           example:
             code: "FORBIDDEN"
             message: "Bu işlem için yetkiniz bulunmamaktadır"
+
 ``
