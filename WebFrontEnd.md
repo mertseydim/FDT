@@ -1,3 +1,13 @@
+# Web Frontend Dokumantasyonu
+
+**Frontend Domain:** https://fdt-34xr.vercel.app
+
+**API Domain:** https://fdt-five.vercel.app
+
+**Test Videosu:** https://youtu.be/-Gh-m-Lmem8
+
+---
+
 # Web Frontend Görev Dağılımı
 
 **Web Frontend Adresi:** [frontend.yazmuh.com](https://frontend.yazmuh.com)
