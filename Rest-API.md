@@ -1,5 +1,7 @@
 # REST API Dokümantasyonu
 
+**POSTMAN Test Videosu:** https://youtu.be/mMg___Ee-Hk
+
 **API Domain:** https://fdt-five.vercel.app
 
 ---
