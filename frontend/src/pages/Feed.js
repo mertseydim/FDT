@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostCard from '../components/PostCard';
 
-const API = 'https://fdt-five.vercel.app';
+const API = process.env.REACT_APP_API_URL || 'https://fdt-five.vercel.app';
 
 function Feed() {
   const [posts, setPosts] = useState([]);

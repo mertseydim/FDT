@@ -1,0 +1,21 @@
+services:
+  api:
+    build: ./rest-api
+    container_name: fdt-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./rest-api/.env
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: http://localhost:3000
+    container_name: fdt-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped

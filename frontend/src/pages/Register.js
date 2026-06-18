@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API = 'https://fdt-five.vercel.app';
+const API = process.env.REACT_APP_API_URL || 'https://fdt-five.vercel.app';
 
 function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
