@@ -30,5 +30,3 @@
 10. Gönderi Listeleme — `GET /api/post/feed`
 11. Beğeni — `POST /api/post/:id/like`
 12. Yorum — `POST /api/post/:id/comment`
-
-Videoda her gereksinim için önce gereksinim adı söylenir, ardından çalışır kanıtı gösterilir.
