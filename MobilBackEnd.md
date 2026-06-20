@@ -1,54 +1,41 @@
-# Mobil Backend (REST API Bağlantısı) Görev Dağılımı
+# Mobil Backend (REST API Bağlantısı) Dokümantasyonu
 
-**REST API Adresi:** [api.yazmuh.com](https://api.yazmuh.com)
+**REST API Adresi:** https://fdt-five.vercel.app
+**Mobil Uygulama:** React Native (Expo), gerçek cihaz (iPhone)
 
-Bu dokümanda, mobil uygulamanın REST API ile iletişimini sağlayan backend entegrasyon görevleri listelenmektedir. Her grup üyesi, kendisine atanan API endpoint'lerinin mobil uygulamadan çağrılması ve yönetilmesinden sorumludur.
+**Kanıt Videosu:** [Mobil Backend kanıt videosu buraya eklenecek](https://youtu.be/VIDEO_ID)
 
----
-
-## Grup Üyelerinin Mobil Backend Görevleri
-
-1. [Ali Tutar'ın Mobil Backend Görevleri](Ali-Tutar/Ali-Tutar-Mobil-Backend-Gorevleri.md)
-2. [Grup Üyesi 2'nin Mobil Backend Görevleri](Grup-Uyesi-2/Grup-Uyesi-2-Mobil-Backend-Gorevleri.md)
-3. [Grup Üyesi 3'ün Mobil Backend Görevleri](Grup-Uyesi-3/Grup-Uyesi-3-Mobil-Backend-Gorevleri.md)
-4. [Grup Üyesi 4'ün Mobil Backend Görevleri](Grup-Uyesi-4/Grup-Uyesi-4-Mobil-Backend-Gorevleri.md)
-5. [Grup Üyesi 5'in Mobil Backend Görevleri](Grup-Uyesi-5/Grup-Uyesi-5-Mobil-Backend-Gorevleri.md)
-6. [Grup Üyesi 6'nın Mobil Backend Görevleri](Grup-Uyesi-6/Grup-Uyesi-6-Mobil-Backend-Gorevleri.md)
+> Videoda, mobil uygulamadan REST API'ye isteğin gittiği ve işlemin veritabanında (MongoDB Atlas) gerçekleştiği net olarak gösterilir.
 
 ---
 
-## Genel Mobil Backend Prensipleri
+## Görev Dağılımı
 
-### 1. HTTP Client Yapılandırması
-- **Base URL:** `https://api.yazmuh.com/v1`
-- **Timeout:** Request timeout 30 saniye, connect timeout 10 saniye
-- **Headers:** 
-  - `Content-Type: application/json`
-  - `Authorization: Bearer {token}` (gerekli endpoint'lerde)
+Proje tek kişilik olduğundan tüm mobil backend (REST API bağlantısı) işlemleri **Mert Seydim** tarafından yapılmıştır.
 
-### 2. Authentication Yönetimi
-- JWT token'ları secure storage'da saklama
-- Token refresh mekanizması implementasyonu
-- Otomatik token yenileme (401 durumunda)
-- Logout durumunda token temizleme
+## Bağlanılan REST API Endpoint'leri
 
-### 3. Error Handling
-- Network hataları (timeout, connection error)
-- HTTP status kodlarına göre uygun mesajlar gösterme
-- Retry mekanizması (network hatalarında)
-- Offline durum yönetimi
+Mobil uygulama, aşağıdaki endpoint'leri kullanarak REST API ile haberleşir. Kimlik doğrulama gerektiren isteklerde `Authorization: Bearer {token}` başlığı gönderilir.
 
-### 4. Caching Stratejisi
-- GET istekleri için response caching
-- Cache invalidation (PUT/DELETE sonrası)
-- Offline-first yaklaşımı (mümkün olduğunda)
+| Gereksinim | HTTP Metodu | Endpoint |
+|---|---|---|
+| Kayıt Olma | POST | `/api/auth/register` |
+| Giriş Yapma | POST | `/api/auth/login` |
+| Gönderi Listeleme (Feed) | GET | `/api/post/feed` |
+| Gönderi Oluşturma | POST | `/api/post/create` |
+| Gönderi Beğenme | POST | `/api/post/:id/like` |
+| Yorum Yapma | POST | `/api/post/:id/comment` |
+| Profil Görüntüleme | GET | `/api/user/:id/profile` |
+| Profil Güncelleme | PUT | `/api/user/:id/profile` |
+| Takip Et / Çık | POST | `/api/user/:id/follow` |
 
-### 5. Loading States
-- Request başlangıcında loading indicator
-- Başarılı/başarısız durum bildirimleri
-- Optimistic updates (kullanıcı deneyimi için)
+## HTTP İstemci Yapılandırması
 
-### 6. Logging ve Debugging
-- API request/response logging (development modunda)
-- Error logging ve crash reporting
-- Network interceptor kullanımı
+- **Base URL:** `https://fdt-five.vercel.app`
+- **İstemci:** Axios
+- **Content-Type:** `application/json`
+- **Kimlik doğrulama:** Giriş sonrası alınan JWT token, korumalı isteklerde `Authorization: Bearer {token}` başlığında gönderilir.
+
+## İşleyiş
+
+Kullanıcı mobil uygulamada bir işlem yaptığında (örn. gönderi oluşturma), uygulama ilgili endpoint'e bir HTTP isteği gönderir. REST API isteği işler ve sonucu MongoDB Atlas veritabanına yazar/okur. Kanıt videosunda bu akış (mobil → REST API → veritabanı) adım adım gösterilir.

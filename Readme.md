@@ -22,8 +22,8 @@ Sosyal Medya ve Forum
 
 ## Proje Linkleri
 
-- **REST API Adresi:**
-- **Web Frontend Adresi:**
+- **REST API Adresi:** https://fdt-five.vercel.app
+- **Web Frontend Adresi:** https://fdt-34xr.vercel.app
 
 ---
 

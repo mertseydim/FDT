@@ -1,66 +1,39 @@
-# Mobil Frontend Görev Dağılımı
+# Mobil Frontend Dokümantasyonu
 
-Bu dokümanda, mobil uygulamanın kullanıcı arayüzü (UI) ve kullanıcı deneyimi (UX) görevleri listelenmektedir. Her grup üyesi, kendisine atanan ekranların tasarımı, implementasyonu ve kullanıcı etkileşimlerinden sorumludur.
+**Mobil Uygulama Teknolojisi:** React Native (Expo)
+**Test Cihazı:** Gerçek cihaz — iPhone (Expo Go)
+**Bağlandığı API:** https://fdt-five.vercel.app
 
----
-
-## Grup Üyelerinin Mobil Frontend Görevleri
-
-1. [Ali Tutar'ın Mobil Frontend Görevleri](Ali-Tutar/Ali-Tutar-Mobil-Frontend-Gorevleri.md)
-2. [Grup Üyesi 2'nin Mobil Frontend Görevleri](Grup-Uyesi-2/Grup-Uyesi-2-Mobil-Frontend-Gorevleri.md)
-3. [Grup Üyesi 3'ün Mobil Frontend Görevleri](Grup-Uyesi-3/Grup-Uyesi-3-Mobil-Frontend-Gorevleri.md)
-4. [Grup Üyesi 4'ün Mobil Frontend Görevleri](Grup-Uyesi-4/Grup-Uyesi-4-Mobil-Frontend-Gorevleri.md)
-5. [Grup Üyesi 5'in Mobil Frontend Görevleri](Grup-Uyesi-5/Grup-Uyesi-5-Mobil-Frontend-Gorevleri.md)
-6. [Grup Üyesi 6'nın Mobil Frontend Görevleri](Grup-Uyesi-6/Grup-Uyesi-6-Mobil-Frontend-Gorevleri.md)
+**Kanıt Videosu:** [Mobil Frontend kanıt videosu buraya eklenecek](https://youtu.be/VIDEO_ID)
 
 ---
 
-## Genel Mobil Frontend Prensipleri
+## Görev Dağılımı
 
-### 1. Tasarım Sistemi
-- **Renk Paleti:** Tutarlı renk kullanımı (primary, secondary, error, success)
-- **Tipografi:** Okunabilir font boyutları ve ağırlıkları
-- **Spacing:** Tutarlı padding ve margin değerleri (8dp/8pt grid sistemi)
-- **Iconography:** Standart icon seti kullanımı (Material Icons/SF Symbols)
+Proje tek kişilik (Grup: TSM) olduğundan tüm mobil frontend ekranları **Mert Seydim** tarafından geliştirilmiştir.
 
-### 2. Responsive Tasarım
-- Farklı ekran boyutlarına uyum (phone, tablet)
-- Landscape ve portrait mod desteği
-- Safe area desteği (notch, status bar)
+| # | Gereksinim (Ekran) | Açıklama |
+|---|---|---|
+| 1 | Kayıt Ol | Kullanıcı adı, e-posta ve şifre ile hesap oluşturma. |
+| 2 | Giriş Yap | E-posta ve şifre ile giriş; başarılı girişte JWT token alınır. |
+| 3 | Forum Akışı (Feed) | Tüm gönderilerin listelendiği, yeni gönderi oluşturulabilen ekran. |
+| 4 | Gönderi Beğenme | Bir gönderiyi beğenme / beğeniyi geri alma. |
+| 5 | Yorum Yapma | Gönderiye yorum ekleme ve yorumları görüntüleme. |
+| 6 | Profil Görüntüleme | E-posta, biyografi, takipçi/takip sayısının görüntülenmesi. |
+| 7 | Profil Güncelleme | Kendi profilinin biyografisini güncelleme. |
+| 8 | Takip Et / Takipten Çık | Başka bir kullanıcıyı takip etme / takibi bırakma. |
 
-### 3. Kullanıcı Deneyimi (UX)
-- **Loading States:** Skeleton screens, progress indicators
-- **Error Handling:** Kullanıcı dostu hata mesajları
-- **Empty States:** Boş durumlar için bilgilendirici mesajlar
-- **Feedback:** Kullanıcı aksiyonlarına anında geri bildirim (toast, snackbar)
+---
 
-### 4. Erişilebilirlik (Accessibility)
-- Content descriptions ve labels
-- Touch target boyutları (min 44x44dp/pt)
-- Screen reader desteği
-- Yüksek kontrast modu desteği
-- Font scaling desteği
+## Kullanılan Teknolojiler
 
-### 5. Performans
-- Lazy loading (liste görünümleri için)
-- Image optimization ve caching
-- Smooth animations (60 FPS hedefi)
-- Memory management
+- **React Native (Expo SDK 54):** Çapraz platform mobil geliştirme.
+- **React Navigation (Native Stack):** Ekranlar arası geçiş.
+- **Axios:** REST API isteklerinin yönetimi.
+- **React Context:** Oturum (token, kullanıcı) durumunun yönetimi.
 
-### 6. Navigasyon
-- Tutarlı navigation pattern (bottom navigation, drawer, tabs)
-- Deep linking desteği
-- Back button handling
-- Navigation state yönetimi
+## Ekran Akışı
 
-### 7. Form Yönetimi
-- Real-time validation
-- Error mesajları alan altında gösterilmesi
-- Keyboard handling (dismiss, next field focus)
-- Form state persistence (opsiyonel)
+Giriş Yap → Forum Akışı (Feed) → (gönderi oluştur / beğen / yorumla) → Profil
 
-### 8. Platform Özellikleri
-- **Android:** Material Design 3 guidelines
-- **iOS:** Human Interface Guidelines
-- Platform-specific UI patterns kullanımı
-- Native feel sağlanması
+Uygulama, kullanıcının yaptığı her işlemi `https://fdt-five.vercel.app` üzerindeki REST API'ye iletir; istekler gerçek cihaz (iPhone) üzerinden gönderilir.
